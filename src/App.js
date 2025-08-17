@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import { Box, Typography, Table, Button, TableCell, TableContainer, TableHead, TableRow, TableBody, Paper } from "@mui/material";
+import { Box, Typography, Table, Button, TableCell, TableContainer, TableHead, TableRow, TableBody, Paper, InputLabel, FormControl, Select, MenuItem } from "@mui/material";
 import NewTask from './newtask';
 import Counter from './counter';
 
@@ -13,7 +13,21 @@ function App() {
     { id: 3, text: 'Gym', complete: false }
   ])
 
+  const [filter, setFilter] = useState('all')
+
+  const filteredTodos = todos.filter(todo => {
+    if (filter === "completed") return todo.complete
+    else if (filter === "yts") return !todo.complete
+    else return true
+  })
+
+  const handleChange = (e) => {
+    setFilter(e.target.value)
+    // filteredTodos()
+  }
+
   const handleComplete = (todo) => {
+    console.log(filteredTodos, "filteredtodo")
     setTodos(prev =>
       prev.map(t =>
         t.id === todo.id ? { ...t, complete: true } : t
@@ -47,11 +61,29 @@ function App() {
       }}
     >
 
-      <NewTask handleSubmit={handleSubmit} />
+      <Typography variant="h3" color='black' sx={{ display: "flex", alignItems: "center", justifyContent: "center" }} component="h2">TODO APP</Typography>
 
-      <Typography variant="h5" color='grey' component="h2" sx={{ m: 0 }}>
-        Your Tasks
-      </Typography>
+      <Box sx={{ display: "flex", justifyContent: "space-between", gap: 2 }}>
+
+        <NewTask handleSubmit={handleSubmit} />
+        <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
+
+          <FormControl >
+            <InputLabel id="demo-simple-select-label">Filter</InputLabel>
+            <Select
+              labelId="demo-simple-select-label"
+              id="demo-simple-select"
+              value={filter}
+              label="Age"
+              onChange={(e) => handleChange(e)}
+            >
+              <MenuItem value={"all"}>All</MenuItem>
+              <MenuItem value={"completed"}>Completed</MenuItem>
+              <MenuItem value={"yts"}>YTS</MenuItem>
+            </Select>
+          </FormControl>
+        </Box>
+      </Box>
 
       <TableContainer component={Paper} >
         <Table aria-label="simple table">
@@ -64,7 +96,7 @@ function App() {
             </TableRow>
           </TableHead>
           <TableBody>
-            {todos.map((todo) => (
+            {filteredTodos.map((todo) => (
               <TableRow
                 key={todo.id}
                 sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
