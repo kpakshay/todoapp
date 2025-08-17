@@ -1,7 +1,11 @@
-import { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Box, Typography, TextField, Button } from "@mui/material"
 
-export default function NewTask({ handleSubmit }) {
+function NewTask({ handleSubmit }) {
+
+    useEffect(()=>{
+        console.log("NewTask Mounted")
+    })
 
     const [task, setTask] = useState('')
 
@@ -12,7 +16,9 @@ export default function NewTask({ handleSubmit }) {
             </Typography>
 
             <TextField id="outlined-basic" label="New Task" value={task} onChange={(e) => { setTask(e.target.value) }} variant="outlined" />
-            <Button variant="outlined" size='large' onClick={() => handleSubmit(task)}>ADD</Button>
+            <Button variant="outlined" size='large' onClick={() => {handleSubmit(task);setTask('')}}>ADD</Button>
         </Box>
     )
 }
+
+export default React.memo(NewTask)

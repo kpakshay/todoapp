@@ -1,24 +1,33 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import { Box, Typography, Table,Button, TableCell, TableContainer, TableHead, TableRow, TableBody, Paper } from "@mui/material";
+import { Box, Typography, Table, Button, TableCell, TableContainer, TableHead, TableRow, TableBody, Paper } from "@mui/material";
 import NewTask from './newtask';
+import Counter from './counter';
 
 function App() {
+
+  useEffect(() => console.log("App Mounted"))
+
   const [todos, setTodos] = useState([
     { id: 1, text: 'Learn React', complete: false },
     { id: 2, text: 'Master Memoizing', complete: true },
     { id: 3, text: 'Gym', complete: false }
   ])
 
-  let [count, setCount] = useState(0)
-
-  const handleSubmit = (task) => {
+  const handleSubmit = useCallback((task) => {
     console.log("g", task)
     setTodos([
       ...todos,
       { id: todos.length + 1, text: `${task}`, complete: false }
     ])
-  }
+  }, [todos])
 
+  const handleComplete=(todo)=>{
+    setTodos(prev =>
+                        prev.map(t =>
+                          t.id === todo.id ? { ...t, complete: true } : t
+                        )
+                      )
+  }
   return (
     <Box
       sx={{
@@ -27,12 +36,12 @@ function App() {
         backgroundColor: "lightblue",
         p: 2,
         display: "flex",
-        flexDirection: "column", // stack rows vertically
-        gap: 2,                   // space between each row
+        flexDirection: "column",
+        gap: 2,
       }}
     >
 
-      <NewTask handleSubmit={handleSubmit}/>
+      <NewTask handleSubmit={handleSubmit} />
 
       <Typography variant="h5" color='grey' component="h2" sx={{ m: 0 }}>
         Your Tasks
@@ -45,6 +54,7 @@ function App() {
               <TableCell>ID</TableCell>
               <TableCell>TASK</TableCell>
               <TableCell>PROGRESS</TableCell>
+              {/* <TableCell>UPDATE</TableCell> */}
             </TableRow>
           </TableHead>
           <TableBody>
@@ -58,19 +68,27 @@ function App() {
                 </TableCell>
                 <TableCell>{todo.text}</TableCell>
                 <TableCell>{todo.complete ? "Completed" : "YTS"}</TableCell>
+                <TableCell>
+                  {/* {todo.complete ?
+                    <Button sx={{ color: "red" }} onClick={() =>
+                      setTodos(prev =>
+                        prev.filter(t => t.id !== todo.id)
+                      )
+                    }>
+                      Delete
+                    </Button> :
+                    <Button sx={{ color: "green" }} onClick={()=>handleComplete(todo)}>
+                      Complete
+                    </Button>} */}
+                </TableCell>
               </TableRow>
             ))}
           </TableBody>
         </Table>
       </TableContainer>
-      <div>
-        <Typography variant="h5" color='grey' component="h2" sx={{ m: 0 }}>
-          Counter
-        </Typography>
 
-        {count} <Button onClick={()=>{setCount(count+1)}}>Increment</Button>
-        <Button onClick={()=>{setCount(--count)}}>Decrement</Button>
-      </div>
+      <Counter />
+
     </Box>
   )
 }
