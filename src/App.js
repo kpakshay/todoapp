@@ -13,6 +13,20 @@ function App() {
     { id: 3, text: 'Gym', complete: false }
   ])
 
+  const handleComplete = (todo) => {
+    setTodos(prev =>
+      prev.map(t =>
+        t.id === todo.id ? { ...t, complete: true } : t
+      )
+    )
+  }
+
+  const handleDelete = (todo) => {
+    setTodos(prev =>
+      prev.filter(t => t.id !== todo.id)
+    )
+  }
+
   const handleSubmit = useCallback((task) => {
     console.log("g", task)
     setTodos([
@@ -21,13 +35,6 @@ function App() {
     ])
   }, [todos])
 
-  const handleComplete=(todo)=>{
-    setTodos(prev =>
-                        prev.map(t =>
-                          t.id === todo.id ? { ...t, complete: true } : t
-                        )
-                      )
-  }
   return (
     <Box
       sx={{
@@ -54,7 +61,7 @@ function App() {
               <TableCell>ID</TableCell>
               <TableCell>TASK</TableCell>
               <TableCell>PROGRESS</TableCell>
-              {/* <TableCell>UPDATE</TableCell> */}
+              <TableCell>UPDATE</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
@@ -69,17 +76,13 @@ function App() {
                 <TableCell>{todo.text}</TableCell>
                 <TableCell>{todo.complete ? "Completed" : "YTS"}</TableCell>
                 <TableCell>
-                  {/* {todo.complete ?
-                    <Button sx={{ color: "red" }} onClick={() =>
-                      setTodos(prev =>
-                        prev.filter(t => t.id !== todo.id)
-                      )
-                    }>
+                  {todo.complete ?
+                    <Button sx={{ color: "red" }} onClick={() => handleDelete(todo)}>
                       Delete
                     </Button> :
-                    <Button sx={{ color: "green" }} onClick={()=>handleComplete(todo)}>
+                    <Button sx={{ color: "green" }} onClick={() => handleComplete(todo)}>
                       Complete
-                    </Button>} */}
+                    </Button>}
                 </TableCell>
               </TableRow>
             ))}
