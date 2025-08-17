@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import { Box, Typography, Table, Button, TableCell, TableContainer, TableHead, TableRow, TableBody, Paper, InputLabel, FormControl, Select, MenuItem } from "@mui/material";
 import NewTask from './newtask';
 import Counter from './counter';
@@ -15,11 +15,11 @@ function App() {
 
   const [filter, setFilter] = useState('all')
 
-  const filteredTodos = todos.filter(todo => {
+  const filteredTodos = useMemo(()=>{todos.filter(todo => {
     if (filter === "completed") return todo.complete
     else if (filter === "yts") return !todo.complete
     else return true
-  })
+  })},[filter,todos])
 
   const handleChange = (e) => {
     setFilter(e.target.value)
