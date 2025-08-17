@@ -1,11 +1,13 @@
-import React, { useState, useEffect, useCallback, useMemo } from 'react';
+import React, { useState, useEffect, useCallback, useMemo, useRef } from 'react';
 import { Box, Typography, Table, Button, TableCell, TableContainer, TableHead, TableRow, TableBody, Paper, InputLabel, FormControl, Select, MenuItem } from "@mui/material";
-import NewTask from './newtask';
-import Counter from './counter';
+import NewTask from './Components/newtask';
+import Counter from './Components/counter';
 
 function App() {
 
   useEffect(() => console.log("App Mounted"))
+
+  const nextId = useRef(4)
 
   const [todos, setTodos] = useState([
     { id: 1, text: 'Learn React', complete: false },
@@ -15,15 +17,16 @@ function App() {
 
   const [filter, setFilter] = useState('all')
 
-  const filteredTodos = useMemo(()=>{todos.filter(todo => {
-    if (filter === "completed") return todo.complete
-    else if (filter === "yts") return !todo.complete
-    else return true
-  })},[filter,todos])
+  const filteredTodos = useMemo(() => {
+  return todos.filter(todo => {
+    if (filter === "completed") return todo.complete;
+    else if (filter === "yts") return !todo.complete;
+    else return true;
+  });
+}, [todos, filter]);
 
   const handleChange = (e) => {
     setFilter(e.target.value)
-    // filteredTodos()
   }
 
   const handleComplete = (todo) => {
@@ -42,10 +45,13 @@ function App() {
   }
 
   const handleSubmit = useCallback((task) => {
+    if(task){
     setTodos([
       ...todos,
-      { id: todos.length + 1, text: `${task}`, complete: false }
+      { id: nextId.current, text: `${task}`, complete: false }
     ])
+    nextId.current+=1
+  } else { alert("Task shouldnt be empty")}
   }, [todos])
 
   return (
