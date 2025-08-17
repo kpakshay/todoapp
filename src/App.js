@@ -28,7 +28,6 @@ function App() {
   }
 
   const handleSubmit = useCallback((task) => {
-    console.log("g", task)
     setTodos([
       ...todos,
       { id: todos.length + 1, text: `${task}`, complete: false }
